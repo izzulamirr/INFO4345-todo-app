@@ -78,3 +78,46 @@ Lab Assignment 2
             'name' => $validated['name'],
             'email' => $validated['email'],
             'salt' => $salt, // Store the generated salt
+
+
+
+# Lab Assignment Authorization
+
+Summary of Changes and Implementation
+1. Authentication and Authorization Layer
+   - Update the routes in web.php ( use the middleware in auth to ensure authenticated user can only access)
+   - exp : Route::middleware(['auth'])->group(function () {
+    Route::resource('todo', TodoController::class);
+
+
+2. Role-Based Access Control (RBAC)
+   - Create models userRole to handle user's roles
+   - migrate the data ( RoleID, UserID, RoleName, Description) in the database
+   - Create rolePermission model to handle the permissions based on the roles in the userRole.
+   - contains permission such ( create, update, view and Delete )
+
+
+5. RBAC Logic in Application
+   - LoginController checks the user's role after authentication and redirects accordingly
+   - in the codes :($role = $user->userRole ? $user->userRole->RoleName : null;
+if ($role === 'Administrator') {
+    return redirect()->route('admin.dashboard');
+} elseif ($role === 'User') {
+    return redirect()->route('todo.index');
+} ) this handles the roles of the users in redirect them to the pages their required based on their roles.
+
+7. Permission Enforcement
+    - Blade views use permission checks to show/hide action buttons.
+    - Admin can give permission to users in the admin dashboard.
+    - in the view pages implement:
+      @php
+    $canCreate = auth()->user()->permissions()->where('Description', 'Create')->count() > 0;
+    $canUpdate = auth()->user()->permissions()->where('Description', 'Update')->count() > 0;
+    $canDelete = auth()->user()->permissions()->where('Description', 'Delete')->count() > 0;
+@endphp
+@if($canCreate) ... @endif
+@if($canUpdate) ... @endif
+@if($canDelete) ... @endif
+
+    - to ensure only users that given permissions can see the actions button to create, update and delete.
+      
