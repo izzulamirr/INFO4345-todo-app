@@ -63,6 +63,11 @@
                                     <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                         {{ __('Profile') }}
                                     </a>
+                                    @if(Auth::user()->Admin())
+                                        <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                            {{ __('Dashboard') }}
+                                        </a>
+                                    @endif
                                     <a class="dropdown-item" href="{{ route('two-factor-settings') }}">{{ __('Two-Factor Settings') }}</a>
                                   
                                     <a class="dropdown-item" href="{{ route('logout') }}"
