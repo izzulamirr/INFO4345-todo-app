@@ -27,7 +27,7 @@ class TodoController extends Controller
         if (!auth()->user()->permissions()->where('Description', 'Create')->count()) {
         abort(403, 'Unauthorized');
     }
-    return view('todo.create');
+    return view('todo.add');
     }
 
     /**
@@ -55,7 +55,7 @@ class TodoController extends Controller
             $type = 'error';
         }
 
-        return redirect('todo')->with($type, $message);
+        return redirect('/todo')->with($type, $message);
     }
 
     /**
@@ -74,36 +74,26 @@ class TodoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Todo $todo)
+    
+         public function edit($id)
     {
-        $userId = Auth::user()->id;
-        $todo = Todo::where(['user_id' => $userId, 'id' => $todo->id])->first();
-        if ($todo) {
-            return view('todo.edit', ['todo' => $todo]);
-        } else {
-            return redirect('todo')->with('error', 'Todo not found');
-        }
+        $todo = Todo::findOrFail($id);
+        return view('todo.edit', compact('todo'));
     }
+    
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Todo $todo)
+   public function update(Request $request, $id)
     {
-        $userId = Auth::user()->id;
-        $todo = Todo::find($todo->id);
-        if (!$todo) {
-            return redirect('todo')->with('error', 'Todo not found.');
-        }
-        $input = $request->input();
-        $input['user_id'] = $userId;
-        $todoStatus = $todo->update($input);
-        if ($todoStatus) {
-            return redirect('todo')->with('success', 'Todo successfully updated.');
-        } else {
-            return redirect('todo')->with('error', 'Oops something went wrong. Todo not updated');
-        }
-    }
+       $todo = Todo::findOrFail($id);
+    $todo->title = $request->input('title');
+    $todo->description = $request->input('description');
+    $todo->status = $request->input('status');
+    $todo->save();
+    return redirect()->route('todo.index')->with('success', 'Todo updated successfully!');
+}
 
     /**
      * Remove the specified resource from storage.

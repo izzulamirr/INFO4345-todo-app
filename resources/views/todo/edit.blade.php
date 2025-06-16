@@ -4,66 +4,48 @@
   <br>
   <div class="row justify-content-center">
     <div class="col-md-12 text-center">
-      <h2>Add Todo</h2>
+      <h2>Edit Todo</h2>
     </div>
   </div>
   <br>
   <div class="row justify-content-center">
     <div class="col-md-8">
-      @if (session('success'))
-        <div class="alert alert-success" role="alert">
-          {{ session('success') }}
-        </div>
-      @endif
-      @if (session('error'))
-        <div class="alert alert-danger" role="alert">
-          {{ session('error') }}
-        </div>
-      @endif
-      <form action="{{ route('todo.store') }}" method="POST">
+      <form action="{{ route('todo.update', $todo->id) }}" method="POST">
         @csrf
+        @method('PUT')
         <div class="form-group">
           <label for="title">Title:</label>
           <input 
             type="text" 
-            class="form-control @error('title') is-invalid @enderror" 
+            class="form-control" 
             id="title" 
             name="title" 
-            value="{{ old('title') }}" 
+            value="{{ old('title', $todo->title) }}" 
             aria-label="Todo Title">
-          @error('title')
-            <div class="invalid-feedback">{{ $message }}</div>
-          @enderror
         </div>
         <div class="form-group">
           <label for="description">Description:</label>
           <textarea 
             name="description" 
-            class="form-control @error('description') is-invalid @enderror" 
+            class="form-control" 
             id="description" 
             rows="5" 
-            aria-label="Todo Description">{{ old('description') }}</textarea>
-          @error('description')
-            <div class="invalid-feedback">{{ $message }}</div>
-          @enderror
+            aria-label="Todo Description">{{ old('description', $todo->description) }}</textarea>
         </div>
         <div class="form-group">
           <label for="status">Select Todo Status:</label>
           <select 
-            class="form-control @error('status') is-invalid @enderror" 
+            class="form-control" 
             id="status" 
             name="status" 
             aria-label="Todo Status">
-            <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+            <option value="pending" {{ old('status', $todo->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+            <option value="completed" {{ old('status', $todo->status) == 'completed' ? 'selected' : '' }}>Completed</option>
           </select>
-          @error('status')
-            <div class="invalid-feedback">{{ $message }}</div>
-          @enderror
         </div>
         <div class="d-flex justify-content-center mt-4">
           <a href="{{ route('todo.index') }}" class="btn btn-secondary mr-2" aria-label="Back to Todo List">Back</a>
-          <button type="submit" class="btn btn-success" aria-label="Submit Todo">Submit</button>
+          <button type="submit" class="btn btn-success" aria-label="Update Todo">Update</button>
         </div>
       </form>
     </div>
