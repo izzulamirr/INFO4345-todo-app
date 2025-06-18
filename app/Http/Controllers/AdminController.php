@@ -16,8 +16,9 @@ class AdminController extends Controller
     // Show the admin dashboard with all users and their todos
     public function dashboard()
     {
+        $hasTodos = \App\Models\Todo::exists();
         $users = User::with('userRole', 'todos')->get();
-        return view('admin.dashboard', compact('users'));
+        return view('admin.dashboard', compact('users', 'hasTodos'));
     }
 
     // Delete a user

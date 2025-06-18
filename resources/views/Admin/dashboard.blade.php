@@ -26,10 +26,14 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->userRole->RoleName ?? 'N/A' }}</td>
                 <td>
-                    @if(isset($user->is_active))
-                        {{ $user->is_active ? 'Active' : 'Inactive' }}
+                                @if($user->todos)
+                        <ul class="mb-0">
+                            @foreach($user->todos as $todo)
+                                <li>Active</li>
+                            @endforeach
+                        </ul>
                     @else
-                        N/A
+                        <span class="text-muted">Not active</span>
                     @endif
                 </td>
                 <td>

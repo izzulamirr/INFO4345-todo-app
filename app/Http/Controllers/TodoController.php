@@ -15,6 +15,7 @@ class TodoController extends Controller
     public function index()
     {
         $userId = Auth::user()->id;
+        $hasTodos = \App\Models\Todo::exists();
         $todos = Todo::where(['user_id' => $userId])->get();
         return view('todo.list', ['todos' => $todos]);
     }

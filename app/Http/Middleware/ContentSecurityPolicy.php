@@ -17,8 +17,14 @@ class ContentSecurityPolicy
     {
         $response = $next($request);
 
-        $response->headers->set('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.bunny.net https://cdn.jsdelivr.net; font-src 'self' https://fonts.bunny.net;");
-
+    $response->headers->set(
+       'Content-Security-Policy',
+        "default-src 'self'; " .
+        "script-src 'self' https://cdn.jsdelivr.net; " .
+        "style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net; " .
+        "font-src 'self' https://fonts.gstatic.com; " .
+        "img-src 'self' data:;"
+    );
         return $response;
     }
 }
